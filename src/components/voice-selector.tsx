@@ -90,6 +90,40 @@ export default function VoiceSelector() {
       sampleAudio:
         "https://audio-samples.github.io/samples/mp3/blizzard_biased/sample-4.mp3",
     },
+    {
+      id: "british",
+      name: "British",
+      gender: "Male",
+      description:
+        "Refined British accent with clear pronunciation and elegant tone",
+      sampleAudio:
+        "https://audio-samples.github.io/samples/mp3/blizzard_biased/sample-5.mp3",
+    },
+    {
+      id: "childlike",
+      name: "Childlike",
+      gender: "Female",
+      description: "Youthful, playful voice perfect for children's content",
+      sampleAudio:
+        "https://audio-samples.github.io/samples/mp3/blizzard_biased/sample-6.mp3",
+    },
+    {
+      id: "robotic",
+      name: "Robotic",
+      gender: "Neutral",
+      description:
+        "Mechanical, computerized voice for sci-fi or tech-related content",
+      sampleAudio:
+        "https://audio-samples.github.io/samples/mp3/blizzard_biased/sample-7.mp3",
+    },
+    {
+      id: "whisper",
+      name: "Whisper",
+      gender: "Female",
+      description: "Soft, intimate whispered voice for ASMR-like narration",
+      sampleAudio:
+        "https://audio-samples.github.io/samples/mp3/blizzard_biased/sample-8.mp3",
+    },
   ];
 
   const togglePlayVoice = (voiceId: string) => {

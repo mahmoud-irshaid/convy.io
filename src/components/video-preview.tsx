@@ -96,7 +96,26 @@ export default function VideoPreview() {
       description: "Your video is being prepared for download.",
     });
 
-    // In a real implementation, this would download the actual video
+    // Create a sample video URL (in a real implementation, this would be the actual video URL)
+    const videoUrl = frames.length > 0 ? frames[0] : null;
+
+    if (!videoUrl) {
+      toast({
+        title: "Download Failed",
+        description: "No video frames available to download.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Create a temporary anchor element to trigger the download
+    const a = document.createElement("a");
+    a.href = videoUrl;
+    a.download = `book-to-video-${Date.now()}.mp4`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
     setTimeout(() => {
       toast({
         title: "Download Complete",
@@ -107,11 +126,26 @@ export default function VideoPreview() {
   };
 
   const handleShare = () => {
-    // In a real implementation, this would open a share dialog
-    toast({
-      title: "Share Link Generated",
-      description: "A shareable link has been copied to your clipboard.",
-    });
+    // Create a sample share URL (in a real implementation, this would be a unique URL for the video)
+    const shareUrl = `https://example.com/shared-video/${Date.now()}`;
+
+    // Copy the URL to clipboard
+    navigator.clipboard.writeText(shareUrl).then(
+      () => {
+        toast({
+          title: "Share Link Generated",
+          description: "A shareable link has been copied to your clipboard.",
+        });
+      },
+      (err) => {
+        console.error("Could not copy text: ", err);
+        toast({
+          title: "Share Failed",
+          description: "Could not generate share link. Please try again.",
+          variant: "destructive",
+        });
+      },
+    );
   };
 
   return (

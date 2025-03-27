@@ -12,6 +12,7 @@ import {
   Share2,
 } from "lucide-react";
 import { createClient } from "../../supabase/server";
+import Link from "next/link";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -197,13 +198,23 @@ export default async function Home() {
             Join thousands of authors and storytellers who are transforming
             their words into captivating videos.
           </p>
-          <a
-            href="/dashboard"
-            className="inline-flex items-center px-6 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Start Creating Now
-            <ArrowUpRight className="ml-2 w-4 h-4" />
-          </a>
+          {user ? (
+            <Link
+              href="/dashboard/book-to-video"
+              className="inline-flex items-center px-6 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Make a Video
+              <ArrowUpRight className="ml-2 w-4 h-4" />
+            </Link>
+          ) : (
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center px-6 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Start Creating Now
+              <ArrowUpRight className="ml-2 w-4 h-4" />
+            </Link>
+          )}
         </div>
       </section>
 

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { BookOpen, Wand2, Loader2 } from "lucide-react";
+import { BookOpen, Wand2, Loader2, FileUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ui/use-toast";
 
@@ -14,6 +14,8 @@ interface TextInputPreviewProps {
 export default function TextInputPreview({ userId }: TextInputPreviewProps) {
   const [text, setText] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const { toast } = useToast();
 
@@ -22,6 +24,59 @@ export default function TextInputPreview({ userId }: TextInputPreviewProps) {
 
   const loadSample = () => {
     setText(sampleText);
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check if file is PDF
+    if (file.type !== "application/pdf") {
+      toast({
+        title: "Invalid File Type",
+        description: "Please upload a PDF file.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      // In a real implementation, this would use a PDF extraction API
+      // For now, we'll simulate PDF text extraction with a delay
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      // Simulate extracted text
+      const extractedText =
+        "This is simulated text extracted from the PDF file: " +
+        file.name +
+        ". In a real implementation, this would contain the actual content from the PDF document.";
+
+      setText(extractedText);
+
+      toast({
+        title: "PDF Uploaded Successfully",
+        description: "Text has been extracted from your PDF.",
+      });
+    } catch (error) {
+      console.error("Error extracting text from PDF:", error);
+      toast({
+        title: "Extraction Failed",
+        description: "Failed to extract text from the PDF. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const triggerFileUpload = () => {
+    fileInputRef.current?.click();
   };
 
   const generateVideo = async () => {
@@ -84,14 +139,42 @@ export default function TextInputPreview({ userId }: TextInputPreviewProps) {
             <BookOpen className="w-5 h-5 mr-2 text-blue-600" />
             Story Text
           </h3>
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-xs"
-            onClick={loadSample}
-          >
-            Load Sample
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs"
+              onClick={triggerFileUpload}
+              disabled={isUploading}
+            >
+              {isUploading ? (
+                <>
+                  <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <FileUp className="w-3 h-3 mr-1" />
+                  Upload PDF
+                </>
+              )}
+            </Button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileUpload}
+              accept="application/pdf"
+              className="hidden"
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs"
+              onClick={loadSample}
+            >
+              Load Sample
+            </Button>
+          </div>
         </div>
 
         <Textarea
